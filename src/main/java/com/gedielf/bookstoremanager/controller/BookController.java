@@ -3,6 +3,7 @@ package com.gedielf.bookstoremanager.controller;
 import com.gedielf.bookstoremanager.dto.MessageResponseDTO;
 import com.gedielf.bookstoremanager.entity.Book;
 import com.gedielf.bookstoremanager.repository.BookRepository;
+import com.gedielf.bookstoremanager.service.BookService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -13,18 +14,21 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/v1/books")
 public class BookController {
 
-    private BookRepository bookRepository;
+    private BookService bookService;
 
-    @Autowired //Fazer injerçao de dependecia da class bookrepository para dentro dessa class
-    public BookController(BookRepository bookRepository) {
-        this.bookRepository = bookRepository;
+    @Autowired
+    public BookController(BookService bookService){
+        this.bookService=bookService;
     }
 
-    @PostMapping //este metodo vai ser responsavel para ser passado junto ao corpo do livro
+    @PostMapping
     public MessageResponseDTO create(@RequestBody Book book){
-        Book savedBook= bookRepository.save(book);
-        return MessageResponseDTO.builder()
-                .message("Book created with ID" + savedBook.getId())
-                .build();
+        return bookService.create(book);
+        //a class bookservice esta tirando a responsabilidade da criaçao de livro
+        //da classe bookcontroller.
+        //
+
     }
+
+
 }
